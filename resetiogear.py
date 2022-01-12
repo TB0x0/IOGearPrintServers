@@ -71,6 +71,17 @@ def resetIOgear(arglength, argcontent):
         connections += 1
 
 
+def selectFunction(function_string, arglength, argcontent):
+
+    if (function_string is "/reset" or function_string is "/r"):
+        resetIOgear(arglength, argcontent)
+    elif (function_string is "/check" or function_string is "/c"):
+        checkIOgearStatus(arglength, argcontent)
+    else:
+        print ("No function given\nUsage: function ip1 ip2 ip...\nAvalable functions are /reset and /check")
+
+
+
 # Pass command line arguments to function
-resetIOgear(len(sys.argv), str(sys.argv))
-#checkIOgearStatus(len(sys.argv), str(sys.argv))
+# resetIOgear(len(sys.argv), str(sys.argv))
+# checkIOgearStatus(len(sys.argv), str(sys.argv))

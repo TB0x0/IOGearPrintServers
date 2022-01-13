@@ -5,10 +5,10 @@ import sys
 import time
 import telnetlib
 
-def prepareHostString(host_string, selection):
-    host_string = host_string.split(',')[selection].strip()
-    if host_string.startswith('\'') and host_string.endswith('\''):
-        prepared_string = host_string[1:-1]
+def prepareString(arg_string, selection):
+    arg_string = arg_string.split(',')[selection].strip()
+    if arg_string.startswith('\'') and arg_string.endswith('\''):
+        prepared_string = arg_string[1:-1]
 
     return prepared_string
 
@@ -20,9 +20,9 @@ def logOutput(output_string):
 
 def checkIOgearStatus(arglength, argcontent):
     content = str(argcontent)[1:-1]
-    connections = 1
+    connections = 2
     while (connections < arglength):
-        p_host = prepareHostString(content, connections)
+        p_host = prepareString(content, connections)
         print(p_host.encode('utf-8'))
 
         tel = telnetlib.Telnet(p_host.encode('utf-8'))
@@ -50,9 +50,9 @@ def checkIOgearStatus(arglength, argcontent):
 # Take a list of connections, step through them, and input commands
 def resetIOgear(arglength, argcontent):
     content = str(argcontent)[1:-1]
-    connections = 1
+    connections = 2
     while (connections < arglength):
-        p_host = prepareHostString(content, connections)
+        p_host = prepareString(content, connections)
         print(p_host.encode('utf-8'))
 
         tel = telnetlib.Telnet(p_host.encode('utf-8'))
@@ -70,18 +70,31 @@ def resetIOgear(arglength, argcontent):
         print ("Device Reset Complete")
         connections += 1
 
+# Main function to take input from terminal and execute functions
+def selectFunction(arglength, argcontent):
+    content = str(argcontent)[1:-1]
+    function_select = 1
 
-def selectFunction(function_string, arglength, argcontent):
+    # I want to catch the index error because it is annoying and not very helpful if a user forgets arguments
+    try:
+        p_string = prepareString(content, function_select)
+    except IndexError:
+        print("No arguments given\nUsage: function_select ip1 ip2 ip...\nAvalable functions are /reset and /check")
+        sys.exit(1)
 
-    if (function_string is "/reset" or function_string is "/r"):
+    function_string = p_string
+    print("Function selected: " + function_string)
+    if (function_string == "/reset" or function_string == "/r"):
         resetIOgear(arglength, argcontent)
-    elif (function_string is "/check" or function_string is "/c"):
+    elif (function_string == "/check" or function_string == "/c"):
         checkIOgearStatus(arglength, argcontent)
     else:
-        print ("No function given\nUsage: function ip1 ip2 ip...\nAvalable functions are /reset and /check")
+        print ("No viable function given\nUsage: function_select ip1 ip2 ip...\nAvalable functions are /reset and /check")
 
 
 
 # Pass command line arguments to function
 # resetIOgear(len(sys.argv), str(sys.argv))
 # checkIOgearStatus(len(sys.argv), str(sys.argv))
+
+selectFunction(len(sys.argv), str(sys.argv))

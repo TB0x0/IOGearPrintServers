@@ -1,12 +1,15 @@
-# Resets iogear print servers as specified in arguments
+# Manages IOGear print servers using terminal or command line
 # Thomas McLean 2022
 
+import socket
 import sys
 import time
 import telnetlib
 
+# Cut the array down, grab the selection, and give only the string without any extra quotes
 def prepareString(arg_string, selection):
     arg_string = arg_string.split(',')[selection].strip()
+
     if arg_string.startswith('\'') and arg_string.endswith('\''):
         prepared_string = arg_string[1:-1]
 
@@ -53,9 +56,15 @@ def resetIOgear(arglength, argcontent):
     connections = 2
     while (connections < arglength):
         p_host = prepareString(content, connections)
-        print(p_host.encode('utf-8'))
+        print("Attempting to connect to host: " + p_host +".....")
 
-        tel = telnetlib.Telnet(p_host.encode('utf-8'))
+        try:
+            tel = telnetlib.Telnet(p_host.encode('utf-8'))
+        except socket.gaierror:
+            print("Could not connect to " + p_host + "\nThe print server may need to be manually restarted, or the IP address verified.")
+            connections += 1
+            continue
+
         print ("Logging onto device")
         tel.read_until('Password:'.encode('utf-8'))
         tel.write('\r\n'.encode('utf-8'))
@@ -94,7 +103,4 @@ def selectFunction(arglength, argcontent):
 
 
 # Pass command line arguments to function
-# resetIOgear(len(sys.argv), str(sys.argv))
-# checkIOgearStatus(len(sys.argv), str(sys.argv))
-
 selectFunction(len(sys.argv), str(sys.argv))

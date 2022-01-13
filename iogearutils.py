@@ -15,12 +15,13 @@ def prepareString(arg_string, selection):
 
     return prepared_string
 
+# Log to a file
 def logOutput(output_string):
     open_file = open('IOGearLogfile.log', 'a')
     open_file.write("\n" + output_string)
-
     open_file.close()
 
+# Check print server status. Prints currently connected printers to the terminal window.
 def checkIOgearStatus(arglength, argcontent):
     content = str(argcontent)[1:-1]
     connections = 2
@@ -50,7 +51,7 @@ def checkIOgearStatus(arglength, argcontent):
         connections += 1
 
         
-# Take a list of connections, step through them, and input commands
+# Reset the print server
 def resetIOgear(arglength, argcontent):
     content = str(argcontent)[1:-1]
     connections = 2

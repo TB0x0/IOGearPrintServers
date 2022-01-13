@@ -2,7 +2,7 @@
 Repository containing IOGear Print Server Utilities
 
 ### Usage
-`python ioscriptname.py function ip1 ip2 ipx`
+`python iogearutils.py function ip1 ip2 ipx`
 
 Currently available functions are /check and /reset
 
